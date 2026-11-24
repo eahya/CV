@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>يحيى حسام الدين سيد العربي — سيرة ذاتية تفاعلية</title>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: IBM Plex Sans Arabic & Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            arabic: ['IBM Plex Sans Arabic', 'Cairo', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              950: '#0B132B',
+              900: '#0F172A',
+              800: '#1E293B',
+              700: '#334155',
+            },
+            gold: {
+              600: '#B45309',
+              500: '#D97706',
+              400: '#F59E0B',
+              100: '#FEF3C7',
+              50: '#FFFBEB',
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #f1f5f9;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      color: #0f172a;
+    }
+
+    /* Keyframe Animations */
+    @keyframes shimmerGold {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    @keyframes fadeInSlideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(217, 119, 6, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+    }
+
+    .animate-fade-in {
+      animation: fadeInSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-pulse-gold {
+      animation: pulseRing 1.8s infinite;
+    }
+
+    /* Top Shimmer Bar */
+    .shimmer-bar {
+      position: relative;
+      overflow: hidden;
+    }
+    .shimmer-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      animation: shimmerGold 2.5s infinite;
+    }
+
+    /* CV A4 Sheet Styling */
+    .cv-sheet {
+      width: 100%;
+      max-width: 210mm;
+      min-height: 297mm;
+      background: #ffffff;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+      border-radius: 8px;
+    }
+
+    /* Print rules for 1-Page A4 PDF */
+    @page {
+      size: A4;
+      margin: 0mm;
+    }
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-area {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+      }
+      .cv-sheet {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- الشريط العلوي الجمالي (يختفي أثناء الطباعة) -->
+  <div class="h-1.5 bg-gradient-to-r from-navy-900 via-gold-500 to-navy-900 shimmer-bar no-print"></div>
+
+  <!-- شريط الأدمن العلوي (مخفي افتراضياً ولا يظهر إلا بعد كتابة YH12) -->
+  <header id="adminToolbar" class="no-print hidden sticky top-0 z-40 bg-navy-900 text-white border-b border-gold-500/40 shadow-lg animate-fade-in">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- زر تبديل التعديل المباشر -->
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-gold-500/20 text-gold-400 text-xs font-bold border border-gold-500/30">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          وضع الأدمن (مفعل)
+        </span>
+        <button id="btnToggleMode" onclick="toggleEditPanel()" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-gold-500 text-navy-950 hover:bg-gold-400 transition shadow cursor-pointer">
+          تعديل البيانات والمشاريع
+        </button>
+      </div>
+
+      <!-- أزرار التصدير والطباعة والخروج -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="downloadPdf()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-navy-900 hover:bg-slate-100 transition shadow cursor-pointer flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-gold-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          طباعة / حفظ PDF
+        </button>
+
+        <button onclick="downloadWordDoc()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-navy-800 text-gold-400 border border-gold-500/30 hover:bg-navy-700 transition shadow cursor-pointer flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          تصدير Word (.doc)
+        </button>
+
+        <button onclick="copyAtsText()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-navy-800 text-slate-200 border border-slate-700 hover:bg-navy-700 transition shadow cursor-pointer flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          نسخ نص ATS
+        </button>
+
+        <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white transition shadow cursor-pointer">
+          تسجيل خروج
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- الحاوية الرئيسية -->
+  <main class="print-area max-w-5xl mx-auto px-4 py-6 w-full flex-grow">
+
+    <!-- لوحة تعديل الأدمن المباشرة (تظهر في وضع التعديل) -->
+    <section id="editPanel" class="no-print hidden mb-6 bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-5 animate-fade-in">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <h2 class="text-base font-bold text-navy-900">لوحة التحكم والتعديل المباشر</h2>
+        <button onclick="resetDefaults()" class="text-xs px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-semibold transition">
+          استعادة البيانات الأساسية
+        </button>
+      </div>
+
+      <!-- رفع الصورة الشخصية -->
+      <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h3 class="text-xs font-bold text-navy-900">الصورة الشخصية (اختياري)</h3>
+          <p class="text-[11px] text-slate-500">رفع صورة رسمية واضحة لتظهر في أعلى السيرة الذاتية وعند الطباعة.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoUpload(event)" class="hidden" />
+          <button onclick="document.getElementById('photoInput').click()" class="px-3 py-1.5 bg-navy-900 text-white text-xs rounded hover:bg-navy-800 transition font-semibold cursor-pointer">
+            رفع صورة جديدة
+          </button>
+          <button id="btnRemovePhoto" onclick="removePhoto()" class="hidden px-3 py-1.5 bg-rose-100 text-rose-700 text-xs rounded hover:bg-rose-200 transition font-semibold cursor-pointer">
+            إزالة الصورة
+          </button>
+        </div>
+      </div>
+
+      <!-- حقول البيانات الشخصية والهدف الوظيفي -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">الاسم الكامل</label>
+          <input type="text" id="inName" oninput="updateCV()" class="w-full border rounded px-3 py-1.5 font-semibold" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">المسمى الوظيفي المستهدف</label>
+          <input type="text" id="inTitle" oninput="updateCV()" class="w-full border rounded px-3 py-1.5 font-semibold" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">العنوان</label>
+          <input type="text" id="inLocation" oninput="updateCV()" class="w-full border rounded px-3 py-1.5" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">رقم الهاتف</label>
+          <input type="text" id="inPhone" oninput="updateCV()" dir="ltr" class="w-full border rounded px-3 py-1.5 text-right" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">البريد الإلكتروني</label>
+          <input type="text" id="inEmail" oninput="updateCV()" dir="ltr" class="w-full border rounded px-3 py-1.5 text-right" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">تاريخ الميلاد</label>
+          <input type="text" id="inDob" oninput="updateCV()" class="w-full border rounded px-3 py-1.5" />
+        </div>
+      </div>
+
+      <div class="text-xs">
+        <label class="block font-bold text-slate-700 mb-1">الهدف الوظيفي</label>
+        <textarea id="inObjective" oninput="updateCV()" rows="3" class="w-full border rounded px-3 py-1.5 text-xs"></textarea>
+      </div>
+
+      <!-- إضافة مشروع حقيقي جديد -->
+      <div class="bg-gold-50/60 p-4 rounded-lg border border-gold-200 space-y-3">
+        <h3 class="text-xs font-bold text-navy-900">إضافة مشروع جديد (حقائقي فقط)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <input type="text" id="projTitle" placeholder="عنوان المشروع بالكامل..." class="border rounded px-3 py-1.5 bg-white" />
+          <input type="text" id="projTools" placeholder="الأدوات والمهارات (مثال: Microsoft Excel، تحليل بيانات)" class="border rounded px-3 py-1.5 bg-white" />
+        </div>
+        <textarea id="projDesc" placeholder="وصف دقيق للمشروع ودور البيانات فيه وكيف تم استخدامه..." class="w-full border rounded px-3 py-1.5 text-xs bg-white" rows="2"></textarea>
+        <div class="flex justify-end">
+          <button onclick="addNewProject()" class="px-4 py-1.5 bg-gold-500 text-navy-950 font-bold text-xs rounded hover:bg-gold-400 transition cursor-pointer">
+            + إضافة المشروع للسيرة الذاتية
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ورقة السيرة الذاتية (تصميم صفحة A4 واحدة بحجم قياسي) -->
+    <div class="flex justify-center">
+      <article id="cvDocument" class="cv-sheet font-arabic text-slate-800 p-7 sm:p-9 flex flex-col justify-between border border-slate-200">
+        
+        <!-- الترويسة الرئيسية -->
+        <header class="border-b-2 border-navy-900 pb-4 mb-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="space-y-1 text-center sm:text-right">
+            <h1 id="outName" class="text-2xl sm:text-3xl font-extrabold text-navy-900 tracking-tight">يحيى حسام الدين سيد العربي</h1>
+            <p id="outTitle" class="text-sm font-bold text-gold-600 tracking-wide uppercase">طموح للعمل كـ محلل بيانات (Data Analyst) | متدرب تحليل بيانات (Data Analyst Intern)</p>
+            
+            <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-xs text-slate-600 font-medium">
+              <span class="flex items-center gap-1">
+                📍 <span id="outLocation">بني سويف – مصر</span>
+              </span>
+              <span class="flex items-center gap-1">
+                📞 <span id="outPhone" dir="ltr">01140473519</span>
+              </span>
+              <span class="flex items-center gap-1">
+                ✉️ <span id="outEmail" dir="ltr">y11412931@gmail.com</span>
+              </span>
+              <span class="flex items-center gap-1">
+                🎂 <span id="outDob">19 يونيو 2007</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- إطار الصورة الشخصية في السيرة الذاتية -->
+          <div id="avatarWrap" class="hidden shrink-0 w-24 h-24 rounded-xl overflow-hidden border-2 border-gold-500 shadow-sm">
+            <img id="outPhoto" src="" alt="الصورة الشخصية" class="w-full h-full object-cover" />
+          </div>
+        </header>
+
+        <!-- أقسام السيرة الذاتية باللغة العربية -->
+        <div class="space-y-4 text-xs sm:text-[13px] leading-relaxed">
+          
+          <!-- 1. الهدف الوظيفي -->
+          <section>
+            <h2 class="text-xs font-bold text-navy-900 uppercase tracking-wider border-b border-gold-400/50 pb-1 mb-2 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-gold-500"></span> الهدف الوظيفي
+            </h2>
+            <p id="outObjective" class="text-slate-700 text-justify leading-relaxed">
+              طالب في المعهد العالي للتجارة (شعبة إدارة الأعمال) أطمح للعمل في مجال تحليل البيانات واكتساب الخبرة العملية كمتدرب تحليل بيانات (Data Analyst Intern) أو في دور مبتدئ (Entry-Level Data Analyst). أسعى لتسخير فهمي لأساسيات إدارة الأعمال والعمليات التشغيلية وتطبيق المهارات التحليلية وأدوات Excel لمساعدة المؤسسات على فهم أدائها واتخاذ قرارات إدارية مبنية على البيانات، مع الحرص المستمر على تطوير مهاراتي التقنية والتعلم في مجالات الذكاء الاصطناعي التطبيقي وذكاء الأعمال.
+            </p>
+          </section>
+
+          <!-- 2. المؤهل الدراسي -->
+          <section>
+            <h2 class="text-xs font-bold text-navy-900 uppercase tracking-wider border-b border-gold-400/50 pb-1 mb-2 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-gold-500"></span> المؤهل الدراسي
+            </h2>
+            <div class="flex justify-between items-baseline font-bold text-navy-900">
+              <span>المعهد العالي للتجارة – شعبة إدارة الأعمال</span>
+              <span class="text-gold-600 font-semibold text-[11px] bg-gold-50 px-2 py-0.5 rounded border border-gold-200">الحالة الدراسية: طالب</span>
+            </div>
+            <ul class="list-disc list-inside text-slate-700 space-y-1 mt-1.5 pl-1">
+              <li>الدراسة تركز على فهم آليات عمل الشركات، الهياكل الإدارية، وتقييم الأداء التشغيلي والمالي.</li>
+              <li>إبراز الربط الجوهري بين إدارة الأعمال وتحليل البيانات، واستخدام البيانات كأداة رئيسية لتفسير مؤشرات الأداء ودعم متخذي القرار.</li>
+            </ul>
+          </section>
+
+          <!-- 3. المهارات التقنية -->
+          <section>
+            <h2 class="text-xs font-bold text-navy-900 uppercase tracking-wider border-b border-gold-400/50 pb-1 mb-2 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-gold-500"></span> المهارات التقنية
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                <span class="font-bold text-navy-900 block mb-0.5">Microsoft Excel</span>
+                <span class="text-slate-600 text-[11px]">مبتدئ (إدخال البيانات، الجداول، المعادلات الأساسية)</span>
+              </div>
+              <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                <span class="font-bold text-navy-900 block mb-0.5">تحليل البيانات (Data Analysis)</span>
+                <span class="text-slate-600 text-[11px]">أتعلم حالياً (التفكير التحليلي وأساسيات معالجة البيانات)</span>
+              </div>
+              <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                <span class="font-bold text-navy-900 block mb-0.5">الذكاء الاصطناعي التطبيقي (Applied AI)</span>
+                <span class="text-slate-600 text-[11px]">مجال اهتمام وشغف للتعلم والتطبيق العملي</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. الاهتمامات المهنية -->
+          <section>
+            <h2 class="text-xs font-bold text-navy-900 uppercase tracking-wider border-b border-gold-400/50 pb-1 mb-2 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-gold-500"></span> الاهتمامات المهنية
+            </h2>
+            <div class="flex flex-wrap gap-1.5 text-[11px]">
+              <span class="px-2.5 py-1 bg-navy-900 text-white rounded-md font-medium">تحليل البيانات</span>
+              <span class="px-2.5 py-1 bg-navy-900 text-white rounded-md font-medium">الذكاء الاصطناعي التطبيقي</span>
+              <span class="px-2.5 py-1 bg-navy-900 text-white rounded-md font-medium">تحليل بيانات الأعمال</span>
+              <span class="px-2.5 py-1 bg-navy-900 text-white rounded-md font-medium">ذكاء الأعمال (Business Intelligence)</span>
+              <span class="px-2.5 py-1 bg-navy-900 text-white rounded-md font-medium">دعم اتخاذ القرارات باستخدام البيانات</span>
+            </div>
+          </section>
+
+          <!-- 5. اللغات -->
+          <section>
+            <h2 class="text-xs font-bold text-navy-900 uppercase tracking-wider border-b border-gold-400/50 pb-1 mb-2 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-gold-500"></span> اللغات
+            </h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                <span class="font-bold text-navy-900">اللغة العربية:</span> اللغة الأم
+              </div>
+              <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                <span class="font-bold text-navy-900">اللغة الإنجليزية:</span> B1 – متوسط
+              </div>
+            </div>
+          </section>
+
+          <!-- 6. المشاريع التطبيقية الحقيقية (تظهر فقط عند إضافة مشاريع من الأدمن) -->
+          <section id="secProjects" class="hidden">
+            <h2 class="text-xs font-bold text-navy-900 uppercase tracking-wider border-b border-gold-400/50 pb-1 mb-2 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-gold-500"></span> المشاريع التطبيقية الحقيقية
+            </h2>
+            <div id="outProjects" class="space-y-2"></div>
+          </section>
+
+        </div>
+
+        <!-- تذييل الورقة الأنيق -->
+        <footer class="mt-5 pt-3 border-t border-slate-200 text-center text-[10.5px] text-slate-400 font-semibold flex justify-between items-center">
+          <span>سيرة ذاتية متوافقة مع أنظمة ATS • يحيى حسام الدين</span>
+          <span>بني سويف – مصر</span>
+        </footer>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- تذييل الصفحة العام مع أيقونة الأدمن المخفية جداً -->
+  <footer class="no-print py-4 text-center text-xs text-slate-400 relative">
+    <p>جميع الحقوق محفوظة © يحيى حسام الدين سيد العربي</p>
+    
+    <!-- أيقونة القفل الباهتة جداً لدخول الأدمن (تظهر فقط عند حوم الماوس عليها) -->
+    <button onclick="promptAdminLogin()" class="absolute bottom-2 left-2 opacity-10 hover:opacity-100 transition duration-300 p-1.5 cursor-pointer text-slate-600 rounded-full hover:bg-slate-200" title="دخول الأدمن">
+      🔒
+    </button>
+  </footer>
+
+  <!-- النافذة المنبثقة لإدخال كلمة مرور الأدمن -->
+  <div id="loginModal" class="no-print hidden fixed inset-0 z-50 bg-navy-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-sm p-6 text-center space-y-4 animate-fade-in">
+      <div class="w-12 h-12 rounded-full bg-gold-100 text-gold-600 flex items-center justify-center mx-auto text-xl font-bold">
+        🔒
+      </div>
+      <h3 class="text-base font-bold text-navy-900">دخول وضع المسؤول (Admin)</h3>
+      <p class="text-xs text-slate-500">أدخل كلمة المرور لتفعيل التعديل والتصدير</p>
+      
+      <input type="password" id="passInput" placeholder="كلمة المرور..." class="w-full border rounded-lg px-3 py-2 text-center text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-gold-500" onkeyup="if(event.key==='Enter') checkPassword()" />
+      
+      <p id="loginError" class="hidden text-xs text-rose-600 font-bold">كلمة المرور غير صحيحة!</p>
+
+      <div class="flex gap-2">
+        <button onclick="closeAdminModal()" class="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition cursor-pointer">إلغاء</button>
+        <button onclick="checkPassword()" class="w-1/2 py-2 bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold rounded-lg transition cursor-pointer">دخول</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // البيانات الأساسية
+    let cvData = {
+      name: "يحيى حسام الدين سيد العربي",
+      title: "طموح للعمل كـ محلل بيانات (Data Analyst) | متدرب تحليل بيانات (Data Analyst Intern)",
+      location: "بني سويف – مصر",
+      phone: "01140473519",
+      email: "y11412931@gmail.com",
+      dob: "19 يونيو 2007",
+      objective: "طالب في المعهد العالي للتجارة (شعبة إدارة الأعمال) أطمح للعمل في مجال تحليل البيانات واكتساب الخبرة العملية كمتدرب تحليل بيانات (Data Analyst Intern) أو في دور مبتدئ (Entry-Level Data Analyst). أسعى لتسخير فهمي لأساسيات إدارة الأعمال والعمليات التشغيلية وتطبيق المهارات التحليلية وأدوات Excel لمساعدة المؤسسات على فهم أدائها واتخاذ قرارات إدارية مبنية على البيانات، مع الحرص المستمر على تطوير مهاراتي التقنية والتعلم في مجالات الذكاء الاصطناعي التطبيقي وذكاء الأعمال."
+    };
+
+    let projects = [];
+    let photoUrl = null;
+    let isAdmin = false;
+
+    // إدارة تسجيل دخول الأدمن بكلمة المرور YH12
+    function promptAdminLogin() {
+      if (isAdmin) {
+        alert("أنت بالفعل في وضع الأدمن.");
+        return;
+      }
+      document.getElementById('loginModal').classList.remove('hidden');
+      document.getElementById('passInput').focus();
+    }
+
+    function closeAdminModal() {
+      document.getElementById('loginModal').classList.add('hidden');
+      document.getElementById('loginError').classList.add('hidden');
+      document.getElementById('passInput').value = '';
+    }
+
+    function checkPassword() {
+      const pass = document.getElementById('passInput').value;
+      if (pass === 'YH12') {
+        isAdmin = true;
+        closeAdminModal();
+        document.getElementById('adminToolbar').classList.remove('hidden');
+        document.getElementById('editPanel').classList.remove('hidden');
+        populateEditForm();
+      } else {
+        document.getElementById('loginError').classList.remove('hidden');
+      }
+    }
+
+    function logoutAdmin() {
+      isAdmin = false;
+      document.getElementById('adminToolbar').classList.add('hidden');
+      document.getElementById('editPanel').classList.add('hidden');
+    }
+
+    function toggleEditPanel() {
+      const panel = document.getElementById('editPanel');
+      panel.classList.toggle('hidden');
+    }
+
+    // التحديث الفوري المباشر للنصوص
+    function populateEditForm() {
+      document.getElementById('inName').value = cvData.name;
+      document.getElementById('inTitle').value = cvData.title;
+      document.getElementById('inLocation').value = cvData.location;
+      document.getElementById('inPhone').value = cvData.phone;
+      document.getElementById('inEmail').value = cvData.email;
+      document.getElementById('inDob').value = cvData.dob;
+      document.getElementById('inObjective').value = cvData.objective;
+    }
+
+    function updateCV() {
+      cvData.name = document.getElementById('inName').value || cvData.name;
+      cvData.title = document.getElementById('inTitle').value || cvData.title;
+      cvData.location = document.getElementById('inLocation').value || cvData.location;
+      cvData.phone = document.getElementById('inPhone').value || cvData.phone;
+      cvData.email = document.getElementById('inEmail').value || cvData.email;
+      cvData.dob = document.getElementById('inDob').value || cvData.dob;
+      cvData.objective = document.getElementById('inObjective').value || cvData.objective;
+
+      document.getElementById('outName').innerText = cvData.name;
+      document.getElementById('outTitle').innerText = cvData.title;
+      document.getElementById('outLocation').innerText = cvData.location;
+      document.getElementById('outPhone').innerText = cvData.phone;
+      document.getElementById('outEmail').innerText = cvData.email;
+      document.getElementById('outDob').innerText = cvData.dob;
+      document.getElementById('outObjective').innerText = cvData.objective;
+    }
+
+    // إدارة رفع الصورة الشخصية
+    function handlePhotoUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          photoUrl = evt.target.result;
+          document.getElementById('outPhoto').src = photoUrl;
+          document.getElementById('avatarWrap').classList.remove('hidden');
+          document.getElementById('btnRemovePhoto').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function removePhoto() {
+      photoUrl = null;
+      document.getElementById('outPhoto').src = '';
+      document.getElementById('avatarWrap').classList.add('hidden');
+      document.getElementById('btnRemovePhoto').classList.add('hidden');
+      document.getElementById('photoInput').value = '';
+    }
+
+    // إدارة إضافة المشاريع الحقيقية
+    function addNewProject() {
+      const title = document.getElementById('projTitle').value.trim();
+      const tools = document.getElementById('projTools').value.trim();
+      const desc = document.getElementById('projDesc').value.trim();
+
+      if (!title || !desc) {
+        alert("يرجى إدخال عنوان ووصف المشروع.");
+        return;
+      }
+
+      projects.push({ title, tools, desc });
+      renderProjects();
+
+      // تفريغ المدخلات
+      document.getElementById('projTitle').value = '';
+      document.getElementById('projTools').value = '';
+      document.getElementById('projDesc').value = '';
+    }
+
+    function renderProjects() {
+      const container = document.getElementById('outProjects');
+      const section = document.getElementById('secProjects');
+
+      if (projects.length === 0) {
+        section.classList.add('hidden');
+        container.innerHTML = '';
+        return;
+      }
+
+      section.classList.remove('hidden');
+      container.innerHTML = projects.map(p => `
+        <div class="border-r-2 border-gold-500 pr-3 py-1 space-y-0.5">
+          <div class="flex justify-between items-baseline font-bold text-navy-900">
+            <span>${p.title}</span>
+            ${p.tools ? `<span class="text-[10.5px] text-slate-500 font-normal">الأدوات: ${p.tools}</span>` : ''}
+          </div>
+          <p class="text-slate-700 text-[11.5px] leading-relaxed">${p.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    // استعادة البيانات الافتراضية
+    function resetDefaults() {
+      cvData = {
+        name: "يحيى حسام الدين سيد العربي",
+        title: "طموح للعمل كـ محلل بيانات (Data Analyst) | متدرب تحليل بيانات (Data Analyst Intern)",
+        location: "بني سويف – مصر",
+        phone: "01140473519",
+        email: "y11412931@gmail.com",
+        dob: "19 يونيو 2007",
+        objective: "طالب في المعهد العالي للتجارة (شعبة إدارة الأعمال) أطمح للعمل في مجال تحليل البيانات واكتساب الخبرة العملية كمتدرب تحليل بيانات (Data Analyst Intern) أو في دور مبتدئ (Entry-Level Data Analyst). أسعى لتسخير فهمي لأساسيات إدارة الأعمال والعمليات التشغيلية وتطبيق المهارات التحليلية وأدوات Excel لمساعدة المؤسسات على فهم أدائها واتخاذ قرارات إدارية مبنية على البيانات، مع الحرص المستمر على تطوير مهاراتي التقنية والتعلم في مجالات الذكاء الاصطناعي التطبيقي وذكاء الأعمال."
+      };
+      projects = [];
+      removePhoto();
+      populateEditForm();
+      updateCV();
+      renderProjects();
+    }
+
+    // التصدير والطباعة
+    function downloadPdf() {
+      window.print();
+    }
+
+    function downloadWordDoc() {
+      const cvElement = document.getElementById('cvDocument').cloneNode(true);
+      const htmlContent = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40' dir='rtl'>
+        <head><meta charset='utf-8'><title>سيرة ذاتية - يحيى حسام الدين</title>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11pt; color: #0F172A; direction: rtl; }
+          h1 { font-size: 18pt; color: #0F172A; margin-bottom: 2px; }
+          h2 { font-size: 11pt; color: #0F172A; border-bottom: 1.5pt solid #D97706; padding-bottom: 2px; }
+        </style>
+        </head>
+        <body dir='rtl'>${cvElement.innerHTML}</body>
+        </html>
+      `;
+      const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Yahya_Hossam_CV_Arabic.doc';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function copyAtsText() {
+      const text = `
+${cvData.name}
+${cvData.title}
+العنوان: ${cvData.location} | الهاتف: ${cvData.phone} | البريد الإلكتروني: ${cvData.email} | تاريخ الميلاد: ${cvData.dob}
+
+الهدف الوظيفي:
+${cvData.objective}
+
+المؤهل الدراسي:
+المعهد العالي للتجارة – شعبة إدارة الأعمال (طالب)
+- إبراز العلاقة بين إدارة الأعمال وتحليل البيانات وفهم أداء الشركات ودعم القرار.
+
+المهارات التقنية:
+- Microsoft Excel: مبتدئ
+- Data Analysis: أتعلم حالياً
+- Applied Artificial Intelligence: مجال اهتمام وتعلم
+
+الاهتمامات المهنية:
+تحليل البيانات، الذكاء الاصطناعي التطبيقي، تحليل بيانات الأعمال، ذكاء الأعمال (Business Intelligence)، دعم اتخاذ القرارات.
+
+اللغات:
+- اللغة العربية: اللغة الأم
+- اللغة الإنجليزية: B1 – متوسط
+      `.trim();
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("تم نسخ نص السيرة الذاتية (ATS) باللغة العربية بنجاح!");
+      });
+    }
+  </script>
+</body>
+</html>
